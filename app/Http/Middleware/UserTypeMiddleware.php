@@ -8,18 +8,18 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UserTypeMiddleware
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
     public function handle(Request $request, Closure $next, string $userType): Response
     {
+        // چک کردن اینکه کاربر لاگین کرده باشد
+        if (!$request->user()) {
+            return redirect()->route('admin.login');
+        }
 
         if ($request->user()->user_type == $userType) {
             return $next($request);
         }
 
-        return to_route('dashboard');
+        // اصلاح نام روت
+        return redirect()->route('admin.dashboard.index');
     }
 }
